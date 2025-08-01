@@ -5,6 +5,7 @@ import org.example.userauthservice_june2025morning.dtos.LoginRequestDto;
 import org.example.userauthservice_june2025morning.dtos.SignupRequestDto;
 import org.example.userauthservice_june2025morning.dtos.UserDto;
 import org.example.userauthservice_june2025morning.dtos.ValidateTokenRequest;
+import org.example.userauthservice_june2025morning.exceptions.UnauthorizedException;
 import org.example.userauthservice_june2025morning.models.User;
 import org.example.userauthservice_june2025morning.services.IAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,11 @@ public class AuthController {
 
     @PostMapping("/validateToken")
     public Boolean validateToken(@RequestBody ValidateTokenRequest validateTokenRequest) {
-       return null;
+       Boolean result = authService.validateToken(validateTokenRequest.getToken(), validateTokenRequest.getUserId());
+       if(!result) {
+           throw new UnauthorizedException("Please login again with correct credentials.");
+       }
+        return result;
     }
 
     //ToDo : Write down wrapper for Logout and ForgetPassword API
